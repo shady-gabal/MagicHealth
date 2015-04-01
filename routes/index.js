@@ -80,6 +80,12 @@ router.get('/message', function(req, res){
 
 });
 
+router.get('/receiveMessage', function(req, res){
+	var resp = new twilio.TwimlResponse();
+	resp.sms("Received your text bro");
+	console.log(resp.toString());
+});
+
 router.get('/app', function(req, res){ 
 
 
