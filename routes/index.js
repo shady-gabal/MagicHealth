@@ -17,7 +17,6 @@ router.get('/', function(req, res) {
 router.post('/message', function(req, res){
 
 	console.log(req);
-
 	client.messages.create({
 	    to: "+13472102276",
 	    from: "+18559561331",
