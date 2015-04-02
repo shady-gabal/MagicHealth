@@ -86,6 +86,7 @@ router.get('/receiveMessage', function(req, res){
 
 	console.log(req.params);
 	resp.message(body);
+	res.send(resp.toString());
 	// var phoneNumber = "+13472102276";
 	// client.messages.create({
 	//     to: phoneNumber,
@@ -113,6 +114,7 @@ router.get('/receiveMessage', function(req, res){
 
 	console.log(resp.toString());
 });
+
 
 router.get('/app', function(req, res){ 
 
