@@ -81,12 +81,15 @@ router.get('/message', function(req, res){
 });
 
 router.get('/receiveMessage', function(req, res){
-	var resp = new twilio.TwimlResponse();
-	var body = "Received your text bro";
+		// console.log(req.query.Body);
 
-	console.log(req.params);
+	var resp = new twilio.TwimlResponse();
+	var messageReceived = req.query.Body;
+	var body = "No you " + messageReceived;
+
 	resp.message(body);
 	res.send(resp.toString());
+	
 	// var phoneNumber = "+13472102276";
 	// client.messages.create({
 	//     to: phoneNumber,
