@@ -95,7 +95,7 @@ router.get('/receiveMessage', function(req, res){
 	var resp = new twilio.TwimlResponse();
 	var messageReceived = req.query.Body;
 
-	console.log(req.query);
+	// console.log(req.query);
 	var phoneNumber = req.query.From;
 	phoneNumber = phoneNumber.replace("+", "");
 
@@ -197,7 +197,7 @@ function sendSubscribe(user, res, resp, existingBody){
 		break;
 
 		case 4: //How long have you been pregnant?
-		body += "How long have you been pregnant, " + user.first_name + "? (example: 6 weeks, 7 months, 10 days)"
+		body += "How long have you been pregnant, " + user.first_name + "? (example: 6 weeks, or 7 months, or 10 days)"
 		break;
 
 		case 6: //Do you have a child that is under 2 years old?
@@ -205,7 +205,7 @@ function sendSubscribe(user, res, resp, existingBody){
 		break;
 
 		case 7: //How old is your child?
-		body += "How old is your child?"
+		body += "How old is your child? (example: 6 weeks, or 7 months, or 10 days)"
 		break;
 
 		case 10: //“What day of the week would you like to receive messages from us?”
@@ -216,12 +216,17 @@ function sendSubscribe(user, res, resp, existingBody){
 		body += "At what time during the day would you like to receive messages from us?"
 		break;
 
-		case 12:
+		case 31:
 		body += "Thanks for subscribing " + user.first_name + "! We will start messaging you soon with helpful tips on ";
-		var pred = user.pregnant ? " having a healthy pregnancy." : "raising a healthy child.";
+		var pred = user.pregnant ? "having a healthy pregnancy." : "raising a healthy child.";
 		body += pred;
 		user.subscribe_step = 100;
 		user.save();
+		break;
+
+		//errors
+		case 13:
+		body += "Sorry, MagicHealth is only for women who are pregnant or who have a child under 2 years of age.";
 		break;
 
 		default: //already subscribed. Resubscribe
@@ -337,16 +342,82 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			break;
 
 			case 6: //Do you have a child that is under 2 years old?
+			if (messageReceived.indexOf('yes') != -1 || messageReceived.indexOf('yea') != -1 || messageReceived.indexOf('yeah') != -1){
+				user.has_child = true;
+				user.subscribe_step = 7;
+				user.save();
+			}
+			else if (messageReceived.indexOf('no') != -1){
+				user.has_child = false;
+				user.subscribe_step = 13;
+				user.save();
+			}
+			else{
+				didntUnderstand = "We didn't understand that. Please answer yes or no.";
+				sendDidntUnderstand = true;
+			}
 			break;
+
+
+
+
+
 
 			case 7: //How old is your child?
+			var num = getNumFromString(messageReceived);
+	 		var days;
+
+	 		if (!num){
+	 			didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months.";
+				sendDidntUnderstand = true;
+	 		}
+
+			else if (messageReceived.indexOf('day') != -1){
+				days = num;
+			}
+			else if (messageReceived.indexOf('week') != -1){
+				days = num * 7;
+			}
+
+			else if (messageReceived.indexOf('month') != -1){
+				days = num * 30;
+			}
+
+			if (days){
+				user.num_days_child = days;
+				user.save();
+			}
+			else{
+				didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months.";
+				sendDidntUnderstand = true;
+			}
 			break;
+
+
+
 
 			case 10: //“What day of the week would you like to receive messages from us?”
+			var day = messageReceived;
+			var days = ["sun", "sunday", "mon", "monday", "tues", "tuesday", "wed", "wednesday", "thurs", "thursday", "fri", "friday", "sat", "saturday"];
+			var index = days.indexOf(day);
+			if (index == -1){
+
+			}
+			else{
+				day = parseInt(day / 2);
+				user.day_to_receive_messages=  day;
+				user.subscribe_step = 31;
+				user.save();	
+			}
+
 			break;
 
-			case 11: //“At what time during the day would you like to receive messages from us?
-			break;
+			// case 11: //“At what time during the day would you like to receive messages from us?
+			// var time = messageReceived;
+			// user.time_to_receive_messages=  1;
+			// user.subscribe_step = 31;
+			// user.save();
+			// break;
 
 			default: //already subscribed. Resubscribe
 			break;
@@ -366,7 +437,7 @@ function getNumFromString(str){
 }
 
 function sendMessageResp(resp, res, body, user){
-	console.log(sprintf("Responding to message %s from %s with %s...", user.last_message, user.phone_number, body));
+	console.log(sprintf("Responding to message %s from %s with %s...", user.last_message_received, user.phone_number, body));
 	resp.message(body);
 	res.send(resp.toString());
 	user.last_message_sent = body;

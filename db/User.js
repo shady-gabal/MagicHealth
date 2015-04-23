@@ -19,7 +19,10 @@ var userSchema = new Schema({
 	// num_months_pregnant : {type: Number, default: 0},
 
 	has_child : {type: Boolean, default: false},
-	age_of_child: {type: Number, default: 0},
+	num_days_child: {type: Number, default: 0},
+
+	day_to_receive_messages : {type: Number, default: 0},
+	time_to_receive_messages: {type: Number},
 
 	age: {type: Number, default: 0},
 
