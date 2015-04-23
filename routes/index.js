@@ -225,7 +225,7 @@ function sendSubscribe(user, res, resp, existingBody){
 		body += "Thanks for subscribing " + user.first_name + "! We will start messaging you soon with helpful tips on ";
 		var pred = user.pregnant ? "having a healthy pregnancy." : "raising a healthy child.";
 		body += pred;
-		user.subscribe_step = 100;
+		user.subscribe_step = -1;
 		user.has_subscribed = true;
 		user.save();
 		break;
