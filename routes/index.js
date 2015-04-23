@@ -282,7 +282,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 			case 2://Hi %s. How old are you?
 
-			var num = getNumFromString(messageReceived);
+			var age = getNumFromString(messageReceived);
 
 			if (!age){
 				didntUnderstand = "That is not a valid age.";
