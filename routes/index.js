@@ -279,13 +279,14 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			break;
 
 			case 1: //What is your name?
-			messageReceived = "     " + messageReceived + "     ";
-			messageReceived.replace(" my name is ", " ");
-			messageReceived.replace(" i'm ", " ");
-			messageReceived.replace(" i am ", " ");
-			messageReceived.replace(" it is ", " ");
-			messageReceived.replace(" it's ", " ");
-			messageReceived.trim();
+			messageReceived = "         " + messageReceived + "        ";
+			messageReceived = messageReceived.replace(" my name is ", " ");
+			messageReceived = messageReceived.replace(" i'm ", " ");
+			messageReceived = messageReceived.replace(" i am ", " ");
+			messageReceived = messageReceived.replace(" it is ", " ");
+			messageReceived = messageReceived.replace(" it's ", " ");
+			messageReceived = messageReceived.trim();
+			console.log(messageReceived);
 
 			var names = messageReceived.split(" ");
 			if (!names || names.length < 1 || names[0].length < 1){
