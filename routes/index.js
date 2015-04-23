@@ -292,6 +292,8 @@ function receiveSubscribe(user, res, resp, messageReceived){
 				user.age = age;
 				user.save();
 				user.subscribe_step = 3;
+				didntUnderstand = "Okay."; //little hack but it works
+				sendDidntUnderstand = true;
 			}
 			break;
 
