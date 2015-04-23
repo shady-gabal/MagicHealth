@@ -185,7 +185,7 @@ function sendSubscribe(user, res, resp, existingBody){
 		break;
 
 		case 1: //What is your name?
-		body += "What is your name?"
+		body += "Thank you for being interested in MagicHealth. What is your name?"
 		break;
 
 		case 2://Hi %s. How old are you?
@@ -221,6 +221,7 @@ function sendSubscribe(user, res, resp, existingBody){
 		var pred = user.pregnant ? "having a healthy pregnancy." : "raising a healthy child.";
 		body += pred;
 		user.subscribe_step = 100;
+		user.has_subscribed = true;
 		user.save();
 		break;
 
@@ -265,6 +266,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			break;
 
 			case 1: //What is your name?
+			console.log("Name : "  + messageReceived);
 			var names = messageReceived.split(" ");
 			if (!names || names.length < 1 || names[0].length < 1){
 				sendDidntUnderstand = true;
@@ -333,6 +335,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 			if (days){
 				user.num_days_pregnant = days;
+				user.subscribe_step = 10;
 				user.save();
 			}
 			else{
