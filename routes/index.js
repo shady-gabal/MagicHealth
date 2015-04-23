@@ -169,13 +169,12 @@ function sendSubscribe(user, res, resp, existingBody){
 	var body = "";
 
 	if (existingBody)
-		body = existingBody + " ".
+		body = existingBody + " ";
 
 	switch(index){
 		// case -1: //Welcome to MagicHealth. To subscribe, please text us 'subscribe'
 		// body = "Welcome to MagicHealth. To subscribe, please text us 'subscribe'."
 		// break;
-
 		case 0: //
 		body += "Welcome to MagicHealth. To subscribe, please text us 'subscribe'."
 		break;
@@ -237,7 +236,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 	messageReceived = messageReceived.trim().toLowerCase();
 
-	switch(index){
+	switch (index){
 		case 0: //Welcome to MagicHealth. To subscribe, please text us 'subscribe'
 		if (messageReceived === 'subscribe'){
 			user.subscribe_step = 1;
