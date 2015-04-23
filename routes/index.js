@@ -18,8 +18,9 @@ router.get('/', function(req, res) {
 
 
 router.get('/reset', function(req, res){
-	var query = User.find({});
-	query.find().remove();
+	User.remove({}, function(){
+		res.send("Aiiiiiiiiiite");
+	});
 });
 
 router.post('/message', function(req, res){
@@ -231,6 +232,7 @@ function sendSubscribe(user, res, resp, existingBody){
 	sendMessageResp(resp, res, body, user);
 }
 
+
 function receiveSubscribe(user, res, resp, messageReceived){
 	console.log(sprintf("Subscribing %s...", user.phone_number));
 
@@ -272,8 +274,10 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			break;
 
 			case 2://Hi %s. How old are you?
-			var age = parseInt(messageReceived);
-			if (age == NaN){
+
+			var num = getNumFromString(messageReceived);
+
+			if (!age){
 				didntUnderstand = "That is not a valid age.";
 				sendDidntUnderstand = true;
 			}
@@ -303,8 +307,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 			case 4: //How long have you been pregnant?
 
-			var matches = messageReceived.match(/(\d+)/);
-	 		var num = Number(matches[0]);
+			var num = getNumFromString(messageReceived);
 	 		var days;
 
 	 		if (!num){
@@ -355,6 +358,11 @@ function receiveSubscribe(user, res, resp, messageReceived){
 	else sendSubscribe(user, res, resp);
 
 	// sendMessageResp(resp, res, body, user);
+}
+
+function getNumFromString(str){
+	var matches = messageReceived.match(/(\d+)/);
+	return Number(matches[0]);
 }
 
 function sendMessageResp(resp, res, body, user){
