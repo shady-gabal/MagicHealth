@@ -180,6 +180,11 @@ function sendSubscribe(user, res, resp, existingBody){
 		// case -1: //Welcome to MagicHealth. To subscribe, please text us 'subscribe'
 		// body = "Welcome to MagicHealth. To subscribe, please text us 'subscribe'."
 		// break;
+
+		case -1: //dont answer
+		return;
+		break;
+
 		case 0: //
 		body += "Welcome to MagicHealth. To subscribe, please text us 'subscribe'."
 		break;
@@ -227,11 +232,13 @@ function sendSubscribe(user, res, resp, existingBody){
 
 		//errors
 		case 13:
-		body += "Sorry, MagicHealth is only for women who are pregnant or who have a child under 2 years of age.";
+		body += "Sorry, MagicHealth is only for women who are pregnant or who have a child under 2 years of age. If you'd like to reset, text us 'subscribe'.";
+		user.subscribe_step = -1;
+		user.save();
 		break;
 
 		default: //already subscribed. Resubscribe
-		body += "Our records show that you're already subscribed. If this is an error or you'd like to resubscribe, text us 'resubscribe'.";
+		body += "Our records show that you're already subscribed. If this is an error or you'd like to resubscribe, just text us 'subscribe'.";
 		break;
 	}
 
@@ -248,6 +255,12 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 	messageReceived = messageReceived.trim().toLowerCase();
 	if (!messageReceived){
+		sendDidntUnderstand = true;
+	}
+	else if (messageReceived === 'subscribe' && user.subscribe_step != 0){
+		user.subscribe_step = 1;
+		user.save();
+		didntUnderstand = "Resetting subscribing process.";
 		sendDidntUnderstand = true;
 	}
 
@@ -393,7 +406,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 				user.save();
 			}
 			else{
-				didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months.";
+				didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months, and write out the numbers instead of spelling them (example: use 2, not two. Yeah I'm lookin at you Kelly).";
 				sendDidntUnderstand = true;
 			}
 			break;
