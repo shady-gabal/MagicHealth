@@ -435,7 +435,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 }
 
 function getNumFromString(str){
-	var matches = messageReceived.match(/(\d+)/);
+	var matches = str.match(/(\d+)/);
 	return Number(matches[0]);
 }
 
