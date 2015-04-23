@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
+var User = require('../db/User.js');
 
 var mongoose = require('../db/mongoose_connect.js');
 
@@ -14,6 +15,8 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
 });
 
+
+var questionsToSubscribe = ["What is your name?", "Hi %s. How old are you?", "Are you pregnant currently?", "Have you had a child?"];
 
 
 router.post('/message', function(req, res){
@@ -87,11 +90,50 @@ router.get('/receiveMessage', function(req, res){
 
 	var resp = new twilio.TwimlResponse();
 	var messageReceived = req.query.Body;
-	console.log(req.query);
-	var body = "No you " + messageReceived.toLowerCase();
 
-	resp.message(body);
-	res.send(resp.toString());
+	console.log(req.query);
+	var phoneNumber = req.query.From;
+	phoneNumber = phoneNumber.replace("+", "");
+
+	var body;
+
+	var query = User.where({phone_number: phoneNumber});
+	query.findOne(function(err, user){
+		if (err){
+			console.log("Error fetching account for " + phoneNumber + " : " + err);
+			body = "There was an error. Our fault b";
+		}
+		else{
+			if (!user){
+				console.log("Creating new account for phone number " + phoneNumber + "...");
+				//no current account, subscribe
+				var newUser = new User({
+					phone_number : phoneNumber
+				});
+				newUser.save();
+				subscribe(newUser, res, resp);
+			}
+			else{
+				console.log("Retrieved account for phone number " + phoneNumber);
+
+				if (!user.has_subscribed){
+					subscribe(user, res, resp);
+				}
+				else{
+					body = "How are you";
+				}
+			}
+		}
+
+
+		if (body){
+			resp.message(body);
+			res.send(resp.toString());
+		}
+	});	
+
+	// var body = "No you " + messageReceived.toLowerCase();
+
 	
 	// var phoneNumber = "+13472102276";
 	// client.messages.create({
@@ -122,8 +164,20 @@ router.get('/receiveMessage', function(req, res){
 });
 
 
-router.get('/app', function(req, res){ 
 
+function subscribe(user, res, resp){
+	console.log("Subscribing " + user.phone_number + "...");
+	var index = user.subscribe_step;
+	var body;
 
-});
+	if (index < questionsToSubscribe.length){
+		body = questionsToSubscribe[index];
+	}
+	else{
+		body = "Sup baby";
+	}
+	resp.message(body);
+	res.send(resp.toString());
+}
+
 module.exports = router;
