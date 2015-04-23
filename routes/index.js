@@ -279,7 +279,14 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			break;
 
 			case 1: //What is your name?
-			console.log("Name : "  + messageReceived);
+			messageReceived = "     " + messageReceived + "     ";
+			messageReceived.replace(" my name is ", " ");
+			messageReceived.replace(" i'm ", " ");
+			messageReceived.replace(" i am ", " ");
+			messageReceived.replace(" it is ", " ");
+			messageReceived.replace(" it's ", " ");
+			messageReceived.trim();
+
 			var names = messageReceived.split(" ");
 			if (!names || names.length < 1 || names[0].length < 1){
 				sendDidntUnderstand = true;
