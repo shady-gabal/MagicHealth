@@ -87,6 +87,7 @@ router.get('/receiveMessage', function(req, res){
 
 	var resp = new twilio.TwimlResponse();
 	var messageReceived = req.query.Body;
+	console.log(req.query);
 	var body = "No you " + messageReceived.toLowerCase();
 
 	resp.message(body);

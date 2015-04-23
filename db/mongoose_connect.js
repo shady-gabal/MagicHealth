@@ -1,6 +1,7 @@
 //exports mongoose connected to db
 
 var mongoose = require('mongoose');
+var uriUtil = require('mongodb-uri');
 
 /* 
  * Mongoose by default sets the auto_reconnect option to true.
