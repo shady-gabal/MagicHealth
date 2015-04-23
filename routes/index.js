@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
 
+var mongoose = require('../db/mongoose_connect.js');
+
 // Your accountSid and authToken from twilio.com/user/account
 var accountSid = 'AC35c4885b8ea34af7e3f36efa03f18f0f';
 var authToken = "b950959ade49e8d6fa835691bfa1a029";
@@ -85,7 +87,7 @@ router.get('/receiveMessage', function(req, res){
 
 	var resp = new twilio.TwimlResponse();
 	var messageReceived = req.query.Body;
-	var body = "No you " + messageReceived;
+	var body = "No you " + messageReceived.toLowerCase();
 
 	resp.message(body);
 	res.send(resp.toString());
