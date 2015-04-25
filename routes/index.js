@@ -341,7 +341,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 	 		var days;
 
 	 		if (!num){
-	 			didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months.";
+	 			didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months,and write out the numbers instead of spelling them (example: use 2, not two).";
 				sendDidntUnderstand = true;
 	 		}
 
@@ -414,7 +414,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 				user.save();
 			}
 			else{
-				didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months, and write out the numbers instead of spelling them (example: use 2, not two. Yeah I'm lookin at you Kelly).";
+				didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months, and write out the numbers instead of spelling them (example: use 2, not two).";
 				sendDidntUnderstand = true;
 			}
 			break;
@@ -459,7 +459,9 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 function getNumFromString(str){
 	var matches = str.match(/(\d+)/);
-	return Number(matches[0]);
+	if (matches && matches[0])
+		return Number(matches[0]);
+	else return null;
 }
 
 function sendMessageResp(resp, res, body, user){
