@@ -436,6 +436,8 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			var days = ["sun", "sunday", "mon", "monday", "tues", "tuesday", "wed", "wednesday", "thurs", "thursday", "fri", "friday", "sat", "saturday"];
 			var index = days.indexOf(day);
 			if (index == -1){
+				didntUnderstand = "Sorry, we didn't understand that. Please enter any day from Monday - Sunday.";
+				sendDidntUnderstand = true;
 
 			}
 			else{
