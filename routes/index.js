@@ -359,9 +359,15 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			}
 
 			if (days){
-				user.num_days_pregnant = days;
-				user.subscribe_step = 10;
-				user.save();
+				if (days > 364){
+					didntUnderstand = "Pretty sure that's impossible. Please make sure you entered the right amount of time.";
+					sendDidntUnderstand = true;
+				}
+				else{
+					user.num_days_pregnant = days;
+					user.subscribe_step = 10;
+					user.save();
+				}
 			}
 			else{
 				didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months.";
@@ -412,15 +418,9 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			}
 
 			if (days){
-				if (days > 364){
-					didntUnderstand = "Pretty sure that's impossible. Please make sure you entered the right amount of time.";
-					sendDidntUnderstand = true;
-				}
-				else{
-					user.num_days_child = days;
-					user.subscribe_step = 10;
-					user.save();
-				}
+				user.num_days_child = days;
+				user.subscribe_step = 10;
+				user.save();
 			}
 			else{
 				didntUnderstand = "We didn't understand that. Please answer in either days, weeks, or months, and write out the numbers instead of spelling them (example: use 2, not two).";
