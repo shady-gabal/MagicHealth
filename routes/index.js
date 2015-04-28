@@ -122,12 +122,12 @@ router.get('/receiveMessage', function(req, res){
 				user.last_message_received = messageReceived;
 				console.log("Retrieved account for phone number " + phoneNumber);
 
-				if (!user.has_subscribed){
+				// if (!user.has_subscribed){
 					receiveSubscribe(user, res, resp, messageReceived);
-				}
-				else{
-					body = "Thank you for subscribing.";
-				}
+				// }
+				// else{
+				// 	body = "Thank you for subscribing.";
+				// }
 			}
 		}
 
@@ -259,12 +259,14 @@ function receiveSubscribe(user, res, resp, messageReceived){
 	}
 	else if (messageReceived === 'subscribe' && user.subscribe_step != 0){
 		user.subscribe_step = 1;
+		user.has_subscribed = false;
 		user.save();
 		didntUnderstand = "Resetting subscribing process.";
 		sendDidntUnderstand = true;
 	}
 
-	else{
+	else if(!user.has_subscribed){
+
 		switch (index){
 			case 0: //Welcome to MagicHealth. To subscribe, please text us 'subscribe'
 			if (messageReceived === 'subscribe'){
@@ -411,6 +413,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 			if (days){
 				user.num_days_child = days;
+				user.subscribe_step = 10;
 				user.save();
 			}
 			else{
@@ -450,9 +453,11 @@ function receiveSubscribe(user, res, resp, messageReceived){
 		}
 	}
 
-	if (sendDidntUnderstand)
-		sendSubscribe(user, res, resp, didntUnderstand);
-	else sendSubscribe(user, res, resp);
+	if (!user.has_subscribed){
+		if (sendDidntUnderstand)
+			sendSubscribe(user, res, resp, didntUnderstand);
+		else sendSubscribe(user, res, resp);
+	}
 
 	// sendMessageResp(resp, res, body, user);
 }
