@@ -19,15 +19,9 @@ var mongooseUri = uriUtil.formatMongoose(mongodbUri);
 
 console.log('connecting to mongodb');
 
-//for local dev
-if (process.env.LOCAL_DEVELOPMENT){
-	mongoose.connect("mongodb://localhost/couponsdb", options);
-}
+//for remote dev
+mongoose.connect(mongooseUri, options);
 
-else{
-	//for remote dev
-	mongoose.connect(mongooseUri, options);
-}
 
 var db = mongoose.connection;
 

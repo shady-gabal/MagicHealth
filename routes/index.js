@@ -19,74 +19,79 @@ router.get('/', function(req, res) {
 
 router.get('/reset', function(req, res){
 	User.remove({}, function(){
-		res.send("Aiiiiiiiiiite");
+		res.send("Aiiiiiiiiiite"); //delete all users
 	});
 });
 
-router.post('/message', function(req, res){
+// router.post('/message', function(req, res){
 
-	console.log(req);
+// 	console.log(req);
 
-		var phoneNumber = "+13472102276";
-		var output = "";
+// 		var phoneNumber = "+13472102276";
+// 		var output = "";
 
-		client.messages.create({
-		    to: "+13472102276",
-		    from: "+18559561331",
-		    body: "Text received."
-		}, function(err, responseData) {
-			 if (!err) { // "err" is an error received during the request, if any
-		        // "responseData" is a JavaScript object containing data received from Twilio.
-		        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-		        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-		        console.log(responseData.from); // outputs "+14506667788"
-		        console.log(responseData.body); // outputs "word to your mother."
-				output += "Sent to " + phoneNumber + "\n";
+// 		client.messages.create({
+// 		    to: "+13472102276",
+// 		    from: "+18559561331",
+// 		    body: "Text received."
+// 		}, function(err, responseData) {
+// 			 if (!err) { // "err" is an error received during the request, if any
+// 		        // "responseData" is a JavaScript object containing data received from Twilio.
+// 		        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+// 		        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+// 		        console.log(responseData.from); // outputs "+14506667788"
+// 		        console.log(responseData.body); // outputs "word to your mother."
+// 				output += "Sent to " + phoneNumber + "\n";
 
-		    }
-		    else{
-		    	console.log(err);
-		    	output += "Error";
-		    }
+// 		    }
+// 		    else{
+// 		    	console.log(err);
+// 		    	output += "Error";
+// 		    }
 
-		    res.send(output);
-		});
+// 		    res.send(output);
+// 		});
 
-	output += "Sending to " + phoneNumber + "\n";
+// 	output += "Sending to " + phoneNumber + "\n";
 
-});
+// });
 
-router.get('/message', function(req, res){
-	console.log(req);
+// router.get('/message', function(req, res){
+// 	console.log(req);
 
-	var phoneNumber = "+13472102276";
-		var output = "";
+// 	var phoneNumber = "+13472102276";
+// 		var output = "";
 
-	client.messages.create({
-	    to: phoneNumber,
-	    from: "+18559561331",
-	    body: "\nKnock knock. \n Who's there? \n God \n God who? \n Godzilla."
-	}, function(err, responseData) {
-		 if (!err) { // "err" is an error received during the request, if any
-	        // "responseData" is a JavaScript object containing data received from Twilio.
-	        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-	        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-	        console.log(responseData.from); // outputs "+14506667788"
-	        console.log(responseData.body); // outputs "word to your mother."
-			output += "Sent to " + phoneNumber;
+// 	client.messages.create({
+// 	    to: phoneNumber,
+// 	    from: "+18559561331",
+// 	    body: "\nKnock knock. \n Who's there? \n God \n God who? \n Godzilla."
+// 	}, function(err, responseData) {
+// 		 if (!err) { // "err" is an error received during the request, if any
+// 	        // "responseData" is a JavaScript object containing data received from Twilio.
+// 	        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+// 	        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+// 	        console.log(responseData.from); // outputs "+14506667788"
+// 	        console.log(responseData.body); // outputs "word to your mother."
+// 			output += "Sent to " + phoneNumber;
 
-	    }
-	    else{
-	    	console.log(err);
-	    	output += "Error";
+// 	    }
+// 	    else{
+// 	    	console.log(err);
+// 	    	output += "Error";
 
-	    }
-	    res.send(output);
+// 	    }
+// 	    res.send(output);
 
-	});
+// 	});
 
-	output += "Sending to " + phoneNumber + "\n";
+// 	output += "Sending to " + phoneNumber + "\n";
 
+// });
+
+router.get('/sendMessageTo', function(req, res){
+	var phoneNumber = req.query.phoneNumber;
+	sendMessage('13472102276', 'Roses are red\nviolets are blue\nYou fuckin idiot');
 });
 
 router.get('/receiveMessage', function(req, res){
@@ -136,33 +141,6 @@ router.get('/receiveMessage', function(req, res){
 			sendMessageResp(resp, res, body, user);
 		}
 	});	
-
-	// var body = "No you " + messageReceived.toLowerCase();
-
-	
-	// var phoneNumber = "+13472102276";
-	// client.messages.create({
-	//     to: phoneNumber,
-	//     from: "+18559561331",
-	//     body: body
-	// }, function(err, responseData) {
-	// 	 if (!err) { // "err" is an error received during the request, if any
-	//         // "responseData" is a JavaScript object containing data received from Twilio.
-	//         // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-	//         // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-	//         console.log(responseData.from); // outputs "+14506667788"
-	//         console.log(responseData.body); // outputs "word to your mother."
-	// 		// output += "Sent to " + phoneNumber;
-
-	//     }
-	//     else{
-	//     	console.log(err);
-	//     	// output += "Error";
-
-	//     }
-	//     // res.send(output);
-
-	// });
 
 
 	console.log(resp.toString());
@@ -484,4 +462,26 @@ function sendMessageResp(resp, res, body, user){
 	user.last_message_sent = body;
 	user.last_time_messaged = Date.now();
 }
+
+function sendMessage(phoneNumber, body){
+	client.messages.create({
+			    to: phoneNumber,
+			    from: "+18559561331",
+			    body: body,
+			}, function(err, responseData) {
+				 if (!err) { // "err" is an error received during the request, if any
+			        // "responseData" is a JavaScript object containing data received from Twilio.
+			        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+			        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+			        console.log(responseData.from); // outputs "+14506667788"
+			        console.log(responseData.body); // outputs "word to your mother."
+			    }
+			    else{
+			    	console.log(err);
+			    }
+			    // res.send(output);
+			});
+}
+
+
 module.exports = router;
