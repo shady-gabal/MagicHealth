@@ -91,7 +91,7 @@ router.get('/reset', function(req, res){
 
 router.get('/sendMessageTo', function(req, res){
 	var phoneNumber = req.query.phoneNumber;
-	sendMessage('13472102276', 'Roses are red\nviolets are blue\nYou fuckin idiot');
+	sendMessage(phoneNumber, 'Roses are red\nViolets are blue\nYou fuckin idiot');
 });
 
 router.get('/receiveMessage', function(req, res){
