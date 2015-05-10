@@ -5,9 +5,9 @@ var client = twilio(accountSid, authToken);
 var User = require('../db/User.js');
 var mongoose = require('../db/mongoose_connect.js');
 
-var date = new Date();
-var today = today.getDay();
-console.log("Today is " + today);
+var today = new Date();
+var day = today.getDay();
+console.log("Today is " + day);
 
 var fq = User.where({});
 fq.findAll(function(err, users){
@@ -22,10 +22,10 @@ fq.findAll(function(err, users){
 });
 
 
-var query = User.where({day_to_receive_messages: today});
+var query = User.where({day_to_receive_messages: day});
 query.findAll(function(err, users){
 	if (err){
-		console.log("Error finding users for day " + today);
+		console.log("Error finding users for day " + day);
 	}
 	else{
 		if (users){
