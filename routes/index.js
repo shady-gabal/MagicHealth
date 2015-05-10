@@ -40,11 +40,14 @@ router.get('/reset', function(req, res){
 router.get('/resetShady', function(req, res){
 	var query = User.where({phone_number: "13472102276"});
 	query.findOne(function(err, user){
-		if (!err & user){
-			user.has_subscribed = false;
-			user.subscribe_step = 10;
-			user.save();
-			res.send("Reset to day subscribing stage shady ");
+		if (!err){
+			if (user){
+				user.has_subscribed = false;
+				user.subscribe_step = 10;
+				user.save();
+				res.send("Reset to day subscribing stage shady ");
+			}
+			else res.send("No user found");
 		}
 		else res.send("Error");
 	});
