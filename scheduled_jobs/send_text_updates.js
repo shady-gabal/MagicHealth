@@ -10,7 +10,7 @@ var day = today.getDay();
 console.log("Today is " + day);
 
 var fq = User.where({});
-fq.findAll(function(err, users){
+fq.find(function(err, users){
 	if (err){
 		console.log("Error finding users shady man");
 	}
@@ -23,7 +23,7 @@ fq.findAll(function(err, users){
 
 
 var query = User.where({day_to_receive_messages: day});
-query.findAll(function(err, users){
+query.find(function(err, users){
 	if (err){
 		console.log("Error finding users for day " + day);
 	}
