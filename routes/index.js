@@ -427,14 +427,17 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			var day = messageReceived;
 			var days = ["sun", "sunday", "mon", "monday", "tues", "tuesday", "wed", "wednesday", "thurs", "thursday", "fri", "friday", "sat", "saturday"];
 			var index = days.indexOf(day);
-			if (index == -1){
+			if (index == -1 || isNaN(index)){
 				didntUnderstand = "Sorry, we didn't understand that. Please enter any day from Monday - Sunday.";
 				sendDidntUnderstand = true;
 
 			}
 			else{
-				day = parseInt(day / 2);
-				user.day_to_receive_messages=  day;
+				console.log("Day is " + day);
+				day /= 2;
+				var intDay = parseInt(day);
+				console.log("intDay is " + intDay);
+				user.day_to_receive_messages=  intDay;
 				user.subscribe_step = 31;
 				user.save();	
 			}
@@ -461,6 +464,18 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 	// sendMessageResp(resp, res, body, user);
 }
+
+router.get('/resetShady', function(req, res){
+	var query = User.where({phone_number: "13472102276"});
+	query.findOne(function(err, user){
+		if (!err & user){
+			user.has_subscribed = false;
+			user.subscribe_step = 10;
+			user.save();
+			res.send("Reset to day subscribing stage shady ");
+		}
+	});
+});
 
 function getNumFromString(str){
 	var matches = str.match(/(\d+)/);

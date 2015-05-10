@@ -29,10 +29,10 @@ query.find(function(err, users){
 		console.log("Error finding users for day " + day);
 	}
 	else{
-		if (users){
+		if (users && users.length > 0){
 			for (var user in users){
 				console.log("Sending message to " + user.phone_number);
-				sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this text Shady");
+				sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this let Shady know por favor");
 			}
 		}
 		else console.log("No users with day_to_receive_messages equal to " + day);
