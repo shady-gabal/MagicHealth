@@ -15,14 +15,15 @@ var client = require('twilio')(accountSid, authToken);
 
 /* SCHEDULE TEXTS */
 
+//'0 0 0 * * *'  every day
 var j = schedule.scheduleJob('0 * * * * *', function(){
     console.log('Checking users for texts to send today...');
     checkUsersAndSendTexts();
+    // sendMessage('13472102276', 'cron bro');
 });
 
 
-function checkUsersAndSendTexts{
-
+function checkUsersAndSendTexts(){
 }
 
 /* GET home page. */
