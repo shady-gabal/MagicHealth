@@ -5,8 +5,37 @@ var client = twilio(accountSid, authToken);
 var User = require('../db/User.js');
 var mongoose = require('../db/mongoose_connect.js');
 
+var date = new Date();
+var today = today.getDay();
+console.log("Today is " + today);
 
-console.log("WORKING...");
+var fq = User.where({});
+fq.findAll(function(err, users){
+	if (err){
+		console.log("Error finding users shady man");
+	}
+	else{
+		for (var user in users){
+			console.log(sprintf("User %s: %d", user.phone_number, user.day_to_receive_messages));
+		}
+	}
+});
+
+
+var query = User.where({day_to_receive_messages: today});
+query.findAll(function(err, users){
+	if (err){
+		console.log("Error finding users for day " + today);
+	}
+	else{
+		if (users){
+			for (var user in users){
+				console.log("Sending message to " + user.phone_number);
+				sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this text Shady");
+			}
+		}
+	}
+});
 
 
 function sendMessage(phoneNumber, body){

@@ -22,7 +22,6 @@ var userSchema = new Schema({
 	num_days_child: {type: Number, default: 0},
 
 	day_to_receive_messages : {type: Number, default: 0},
-	time_to_receive_messages: {type: Number},
 
 	age: {type: Number, default: 0},
 
