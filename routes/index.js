@@ -1,30 +1,29 @@
 var express = require('express');
 var router = express.Router();
-var twilio = require('twilio');
 var User = require('../db/User.js');
 var sprintf = require('sprintf-js').sprintf;
-var schedule = require('node-schedule');
+// var schedule = require('node-schedule');
 
 var mongoose = require('../db/mongoose_connect.js');
-
 // Your accountSid and authToken from twilio.com/user/account
+var twilio = require('twilio');
 var accountSid = 'AC35c4885b8ea34af7e3f36efa03f18f0f';
 var authToken = "b950959ade49e8d6fa835691bfa1a029";
-var client = require('twilio')(accountSid, authToken);
+var client = twilio(accountSid, authToken);
 
 
 /* SCHEDULE TEXTS */
 
 //'0 0 0 * * *'  every day
-var j = schedule.scheduleJob('0 * * * * *', function(){
-    console.log('Checking users for texts to send today...');
-    checkUsersAndSendTexts();
-    // sendMessage('13472102276', 'cron bro');
-});
+// var j = schedule.scheduleJob('0 * * * * *', function(){
+//     console.log('Checking users for texts to send today...');
+//     checkUsersAndSendTexts();
+//     // sendMessage('13472102276', 'cron bro');
+// });
 
 
-function checkUsersAndSendTexts(){
-}
+// function checkUsersAndSendTexts(){
+// }
 
 /* GET home page. */
 router.get('/', function(req, res) {
