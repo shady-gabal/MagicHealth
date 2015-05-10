@@ -15,7 +15,7 @@ var client = require('twilio')(accountSid, authToken);
 
 /* SCHEDULE TEXTS */
 
-var j = schedule.scheduleJob('1 * * * *', function(){
+var j = schedule.scheduleJob('*/1 * * * *', function(){
     console.log('Checking users for texts to send today...');
     checkUsersAndSendTexts();
 });
