@@ -16,6 +16,7 @@
     "twilio" : "",
     "mongoose": "3.8.21",
     "mongodb-uri" : "^0.9.7",
-    "sprintf-js" : "~1.0.2"
+    "sprintf-js" : "~1.0.2",
+    "node-schedule" : ""
   }
 }

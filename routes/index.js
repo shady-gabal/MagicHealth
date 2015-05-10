@@ -3,6 +3,7 @@ var router = express.Router();
 var twilio = require('twilio');
 var User = require('../db/User.js');
 var sprintf = require('sprintf-js').sprintf;
+var schedule = require('node-schedule');
 
 var mongoose = require('../db/mongoose_connect.js');
 
@@ -10,6 +11,19 @@ var mongoose = require('../db/mongoose_connect.js');
 var accountSid = 'AC35c4885b8ea34af7e3f36efa03f18f0f';
 var authToken = "b950959ade49e8d6fa835691bfa1a029";
 var client = require('twilio')(accountSid, authToken);
+
+
+/* SCHEDULE TEXTS */
+
+var j = schedule.scheduleJob('1 * * * *', function(){
+    console.log('Checking users for texts to send today...');
+    checkUsersAndSendTexts();
+});
+
+
+function checkUsersAndSendTexts{
+
+}
 
 /* GET home page. */
 router.get('/', function(req, res) {
