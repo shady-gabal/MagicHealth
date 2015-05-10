@@ -17,7 +17,7 @@ fq.find(function(err, users){
 	}
 	else{
 		for (var user in users){
-			console.log(sprintf("User %s: %d", user.phone_number, user.day_to_receive_messages));
+			console.log("User " user.phone_number + " : " + user.day_to_receive_messages);
 		}
 	}
 });
