@@ -4,6 +4,7 @@ var authToken = "b950959ade49e8d6fa835691bfa1a029";
 var client = twilio(accountSid, authToken);
 var User = require('../db/User.js');
 var mongoose = require('../db/mongoose_connect.js');
+var sprintf = require('sprintf-js').sprintf;
 
 var today = new Date();
 var day = today.getDay();
@@ -34,6 +35,7 @@ query.find(function(err, users){
 				sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this text Shady");
 			}
 		}
+		else console.log("No users with day_to_receive_messages equal to " + day);
 	}
 });
 
