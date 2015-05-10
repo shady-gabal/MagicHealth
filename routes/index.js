@@ -451,9 +451,8 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 			}
 			else{
-				console.log("Day is " + day);
-				day /= 2;
-				var intDay = parseInt(day);
+				console.log("Day is " + day + ". index is " + index);
+				var intDay = parseInt(index/2);
 				console.log("intDay is " + intDay);
 				user.day_to_receive_messages=  intDay;
 				user.subscribe_step = 31;
