@@ -117,6 +117,7 @@ router.get('/receiveMessage', function(req, res){
 	// console.log(req.query);
 	var phoneNumber = req.query.From;
 	phoneNumber = phoneNumber.replace("+", "");
+	phoneNumber = phoneNumber.trim();
 
 	var body;
 
