@@ -224,7 +224,7 @@ router.get('/receiveMessage', function(req, res){
 				user.last_message_received = messageReceived;
 				console.log("Retrieved account for phone number " + phoneNumber);
 
-				if (messageReceived.indexOf("unsubscribe") != -1){
+				if (messageReceived.toLowerCase().indexOf("unsubscribe") != -1){
 					user.remove();
 					body = "You have been unsubscribed.";
 				}
