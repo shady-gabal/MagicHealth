@@ -49,13 +49,16 @@ function sendCorrectTextUpdate(user){
 
 	var query = PregnancyTextUpdate.where({week: weekNum});
 
-	query.find(function(err, update){
+	query.find(function(err, updates){
 		if (err){
 			console.log("Error finding ptu for week " + weekNum + " for user " + user.phone_number);
 		}
 		else{
-			if (update){
-				sendMessage(user.phone_number, update.data);
+			if (updates){
+				updates.forEach(function(update){
+					console.log("sending update.data: " + update.data + " for week " + update.week);
+					sendMessage(user.phone_number, update.data);
+				});
 			}
 			else console.log("No ptu for week " + weekNum + " for user " + user.phone_number);
 		}
