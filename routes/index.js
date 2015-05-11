@@ -92,6 +92,17 @@ router.get('/refillPregInfo', function(req, res){
 
 });
 
+router.get('/getPregInfo', function(req, res){
+	var body = "Fetching...\n\n";
+	var q = PregnancyTextUpdate.where({});
+	q.find(function(err, tus){
+		tus.forEach(function(tu){
+			body += ("week " + tu.week + " data: " + tu.data);
+		});
+		res.send(body);
+	});
+});
+
 
 // router.get('/message', function(req, res){
 // 	console.log(req);
@@ -449,8 +460,17 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 			case 10: //“What day of the week would you like to receive messages from us?”
 			var day = messageReceived;
-			var days = ["sun", "sunday", "mon", "monday", "tues", "tuesday", "wed", "wednesday", "thurs", "thursday", "fri", "friday", "sat", "saturday"];
-			var index = days.indexOf(day);
+			var days = ["sun", "mon", "tues", "wed", "thurs", "fri", "sat"];
+			
+			var index = -1;
+			for (var i = 0; i < days.length; i++){
+				if(day.indexOf(days[i]) != -1){
+					index = i;
+					break;
+				}
+			}
+
+			// var index = days.indexOf(day);
 			if (index == -1 || isNaN(index)){
 				didntUnderstand = "Sorry, we didn't understand that. Please enter any day from Monday - Sunday.";
 				sendDidntUnderstand = true;
