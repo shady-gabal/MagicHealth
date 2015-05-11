@@ -3,6 +3,8 @@ var router = express.Router();
 var User = require('../db/User.js');
 var sprintf = require('sprintf-js').sprintf;
 var PregnancyTextUpdate = require('../db/PregnancyTextUpdate.js');
+var VaccineTextUpdate = require('../db/VaccineTextUpdate.js');
+
 var fs = require('fs');
 // var schedule = require('node-schedule');
 
