@@ -4,6 +4,7 @@ var authToken = "b950959ade49e8d6fa835691bfa1a029";
 var client = twilio(accountSid, authToken);
 var User = require('../db/User.js');
 var PregnancyTextUpdate = require('../db/PregnancyTextUpdate.js');
+var VaccineTextUpdate = require('../db/VaccineTextUpdate.js');
 
 var mongoose = require('../db/mongoose_connect.js');
 var sprintf = require('sprintf-js').sprintf;
@@ -13,7 +14,7 @@ var day = today.getDay();//timezone is utc - since you're checking every day it'
 
 console.log("Today is " + day);
 
-var fq = User.where({has_subscribed: true});
+// var fq = User.where({has_subscribed: true});
 
 // fq.find(function(err, users){
 // 	if (err){
@@ -27,18 +28,16 @@ var fq = User.where({has_subscribed: true});
 // });
 
 
-var query = User.where({day_to_receive_messages: day, has_subscribed: true});
+var query = User.where({day_to_receive_messages: day, has_subscribed: true, has_child: true});
 query.find(function(err, users){
 	if (err){
 		console.log("Error finding users for day " + day);
 	}
 	else{
 		if (users && users.length > 0){
-
 			users.forEach(function(user){
 				console.log("Sending message to " + user.phone_number);
-				// sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this let Shady know por favor");
-				sendCorrectTextUpdate(user);
+				sendCorrectVaccineUpdate(user);
 			});
 
 		}
@@ -46,26 +45,29 @@ query.find(function(err, users){
 	}
 });
 
-function sendCorrectTextUpdate(user){
-	var weekNum = parseInt(user.num_days_pregnant / 7);
+function sendCorrectVaccineUpdate(user){
+	var monthNum = parseInt(user.num_days_pregnant / 30);
 
-	var query = PregnancyTextUpdate.where({week: weekNum});
+	if (user.sent_vaccine_updates.indexOf(monthNum) == -1){
+		var query = VaccineTextUpdate.where({month: monthNum});
 
-	query.find(function(err, updates){
-		if (err){
-			console.log("Error finding ptu for week " + weekNum + " for user " + user.phone_number);
-		}
-		else{
-			if (updates){
-				updates.forEach(function(update){
-					console.log("sending update.data: " + update.data + " for week " + update.week);
-					sendMessage(user.phone_number, update.data);
-				});
+		query.find(function(err, updates){
+			if (err){
+				console.log("Error finding vtu for month " + monthNum + " for user " + user.phone_number);
 			}
-			else console.log("No ptu for week " + weekNum + " for user " + user.phone_number);
-		}
-	});
+			else{
+				if (updates){
+					updates.forEach(function(update){
+						console.log("sending v update.data: " + update.data + " for month " + update.month);
+						sendMessage(user.phone_number, update.data);
+					});
+					user.sent_vaccine_updates.push(monthNum);
 
+				}
+				else console.log("No vtu for month " + monthNum + " for user " + user.phone_number);
+			}
+		});
+	}
 }
 
 function sendMessage(phoneNumber, body){

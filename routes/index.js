@@ -13,6 +13,9 @@ var accountSid = 'AC35c4885b8ea34af7e3f36efa03f18f0f';
 var authToken = "b950959ade49e8d6fa835691bfa1a029";
 var client = twilio(accountSid, authToken);
 
+// var SEND_TEXT_UPDATES_HOUR = 15;
+var SEND_TEXT_UPDATES_HOUR = 0;
+
 
 /* SCHEDULE TEXTS */
 
@@ -92,12 +95,57 @@ router.get('/refillPregInfo', function(req, res){
 
 });
 
+
+router.get('/refillVaccInfo', function(req, res){
+	var body = "";
+	VaccineTextUpdate.remove({}, function(){
+		body += 'Removed old data.\n';
+
+		fs.readFile('input_data/vaccine_data', 'utf8', function (err,fileData) {
+		  if (err) {
+		     body += err;
+		  }
+		  else{
+		  	var data = fileData.split("\n\n");
+
+		  	data.forEach(function(tuple){
+		  		var arr = tuple.split("\n");
+		  		var month = parseInt(arr[0]);
+		  		var info = arr[1];
+		  		body += "Creating " + month + " : " + info + " \n\n";
+
+		  		var v = new VaccineTextUpdate({
+		  			month: month,
+		  			data: info
+		  		});
+		  		v.save();
+		  	});
+		  }
+		  res.send(body);
+		});
+	});
+
+});
+
+
+
 router.get('/getPregInfo', function(req, res){
 	var body = "Fetching...\n\n";
 	var q = PregnancyTextUpdate.where({});
 	q.find(function(err, tus){
 		tus.forEach(function(tu){
 			body += ("week " + tu.week + " data: " + tu.data);
+		});
+		res.send(body);
+	});
+});
+
+router.get('/getVaccInfo', function(req, res){
+	var body = "Fetching...\n\n";
+	var q = VaccineTextUpdate.where({});
+	q.find(function(err, tus){
+		tus.forEach(function(tu){
+			body += ("month " + tu.month + " data: " + tu.data);
 		});
 		res.send(body);
 	});
@@ -176,8 +224,12 @@ router.get('/receiveMessage', function(req, res){
 				user.last_message_received = messageReceived;
 				console.log("Retrieved account for phone number " + phoneNumber);
 
+				if (messageReceived.indexOf("unsubscribe") != -1){
+					user.remove();
+					body = "You have been unsubscribed.";
+				}
 				// if (!user.has_subscribed){
-					receiveSubscribe(user, res, resp, messageReceived);
+				else receiveSubscribe(user, res, resp, messageReceived);
 				// }
 				// else{
 				// 	body = "Thank you for subscribing.";
@@ -244,12 +296,18 @@ function sendSubscribe(user, res, resp, existingBody){
 		body += "What day of the week would you like to receive messages from us?"
 		break;
 
-		case 11: //“At what time during the day would you like to receive messages from us?
-		body += "At what time during the day would you like to receive messages from us?"
+		// case 11: //“At what time during the day would you like to receive messages from us?
+		// body += "At what time during the day would you like to receive messages from us?"
+		// break;
+
+		case 11://Today is ..
+		var arr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+		var intDay = (new Date()).getDay();
+		body += "Today is " + arr[intDay] + ", and we've already sent out the texts for the day. Would you like to receive your weekly text now?";
 		break;
 
 		case 31:
-		body += "Thanks for subscribing " + user.first_name + "! We will start messaging you soon with helpful tips on ";
+		body += "Thanks for subscribing " + user.first_name + "! If you ever change your mind, just text us 'unsubscribe' to unsubscribe. We will start messaging you soon with helpful tips on ";
 		var pred = user.pregnant ? "having a healthy pregnancy." : "raising a healthy child.";
 		body += pred;
 		user.subscribe_step = -1;
@@ -481,18 +539,40 @@ function receiveSubscribe(user, res, resp, messageReceived){
 				var intDay = parseInt(index/2);
 				console.log("intDay is " + intDay);
 				user.day_to_receive_messages=  intDay;
-				user.subscribe_step = 31;
-				user.save();	
+
+
+				var date = new Date();
+				var today = date.getDay();//timezone is utc - since you're checking every day it's fine but if you werent you'd have to align the timezone to where the user is	
+				var hour = date.getHours();
+
+				if (today == intDay && hour >= SEND_TEXT_UPDATES_HOUR){
+					// user.subscribe_step = 11;
+					user.subscribe_step = 31;
+				}
+				else{
+					user.subscribe_step = 31;
+				}
+				user.save();
+
 			}
 
 			break;
 
-			// case 11: //“At what time during the day would you like to receive messages from us?
-			// var time = messageReceived;
-			// user.time_to_receive_messages=  1;
-			// user.subscribe_step = 31;
-			// user.save();
-			// break;
+			case 11:
+			if (messageReceived.indexOf('yes') != -1 || messageReceived.indexOf('yea') != -1 || messageReceived.indexOf('yeah') != -1){
+				user.subscribe_step = 31;
+				user.save();
+			}
+			else if (messageReceived.indexOf('no') != -1){
+				user.subscribe_step = 31;
+				user.save();
+			}
+			else{
+				didntUnderstand = "We didn't understand that. Please answer yes or no.";
+				sendDidntUnderstand = true;
+			}
+			break;
+
 
 			default: //already subscribed. Resubscribe
 			break;
@@ -544,18 +624,8 @@ function sendMessage(phoneNumber, body){
 			});
 }
 
-function chunkSubstr1(str, size) {
-  var chunks = new Array(str.length / size + .5 | 0),
-      nChunks = chunks.length;
+function sendWeeklyText(user){
 
-  var newo = 0;
-  for(var i = 0, o = 0; i < nChunks; ++i, o = newo) {
-    newo += size;
-    chunks[i] = str.substr(o, size);
-  }
-
-  return chunks;
 }
-
 
 module.exports = router;
