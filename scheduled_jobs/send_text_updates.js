@@ -70,13 +70,13 @@ function sendCorrectTextUpdate(user){
 }
 
 function sendMessage(phoneNumber, body){
-	var arr = chunkSubstr1(body, MAX_TEXT_SIZE);
+	// var arr = chunkSubstr1(body, MAX_TEXT_SIZE);
 
-	arr.forEach(function(text){
+	// arr.forEach(function(text){
 		client.messages.create({
 				    to: phoneNumber,
 				    from: "+18559561331",
-				    body: text,
+				    body: body,
 				}, function(err, responseData) {
 					 if (!err) { // "err" is an error received during the request, if any
 				        // "responseData" is a JavaScript object containing data received from Twilio.
@@ -90,19 +90,19 @@ function sendMessage(phoneNumber, body){
 				    }
 				    // res.send(output);
 				});
-	});
+	// });
 
 }
 
-function chunkSubstr1(str, size) {
-  var chunks = new Array(str.length / size + .5 | 0),
-      nChunks = chunks.length;
+// function chunkSubstr1(str, size) {
+//   var chunks = new Array(str.length / size + .5 | 0),
+//       nChunks = chunks.length;
 
-  var newo = 0;
-  for(var i = 0, o = 0; i < nChunks; ++i, o = newo) {
-    newo += size;
-    chunks[i] = str.substr(o, size);
-  }
+//   var newo = 0;
+//   for(var i = 0, o = 0; i < nChunks; ++i, o = newo) {
+//     newo += size;
+//     chunks[i] = str.substr(o, size);
+//   }
 
-  return chunks;
-}
+//   return chunks;
+// }
