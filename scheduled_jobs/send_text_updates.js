@@ -16,9 +16,9 @@ fq.find(function(err, users){
 		console.log("Error finding users shady man");
 	}
 	else{
-		for (var user in users){
+		users.forEach(function(user){
 			console.log("User " + user.phone_number + " : " + user.day_to_receive_messages);
-		}
+		});
 	}
 });
 
@@ -30,7 +30,7 @@ query.find(function(err, users){
 	}
 	else{
 		if (users && users.length > 0){
-			
+
 			users.forEach(function(user){
 				console.log("Sending message to " + user.phone_number);
 				sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this let Shady know por favor");
