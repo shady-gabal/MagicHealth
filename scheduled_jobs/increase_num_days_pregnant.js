@@ -9,7 +9,10 @@ qy.find(function(err, users){
 		if (users && users.length > 0){
 			users.forEach(function(user){
 				var oldVal = user.num_days_pregnant;
-				user.num_days_pregnant += 1;
+				// user.num_days_pregnant += 1; 
+
+				user.num_days_pregnant += 7; 
+ 
 				user.save();
 				console.log("Increasing user " + user.phone_number + " num days pregnant from " + oldVal + " to " + user.num_days_pregnant);
 			});
