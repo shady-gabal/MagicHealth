@@ -44,10 +44,14 @@ router.get('/resetShady', function(req, res){
 	query.findOne(function(err, user){
 		if (!err){
 			if (user){
-				user.has_subscribed = false;
-				user.subscribe_step = 10;
+				user.pregnant = true;
+				user.first_name = "Shady";
+				user.num_days_pregnant = 1;
+				user.day_to_receive_messages = 1;
+				user.has_subscribed = true;
+				user.subscribe_step = 31;
 				user.save();
-				res.send("Reset to day subscribing stage shady ");
+				res.send("Fix er upper boooiiiiii aii");
 			}
 			else res.send("No user found");
 		}
