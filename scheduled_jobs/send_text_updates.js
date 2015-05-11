@@ -30,10 +30,12 @@ query.find(function(err, users){
 	}
 	else{
 		if (users && users.length > 0){
-			for (var user in users){
+			
+			users.forEach(function(user){
 				console.log("Sending message to " + user.phone_number);
 				sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this let Shady know por favor");
-			}
+			});
+
 		}
 		else console.log("No users with day_to_receive_messages equal to " + day);
 	}
