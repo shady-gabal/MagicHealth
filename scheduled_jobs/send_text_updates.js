@@ -13,6 +13,9 @@ var day = today.getDay();//timezone is utc - since you're checking every day it'
 console.log("Today is " + day);
 
 var fq = User.where({has_subscribed: true});
+
+var MAX_TEXT_SIZE = 40;
+
 fq.find(function(err, users){
 	if (err){
 		console.log("Error finding users shady man");
@@ -67,21 +70,39 @@ function sendCorrectTextUpdate(user){
 }
 
 function sendMessage(phoneNumber, body){
-	client.messages.create({
-			    to: phoneNumber,
-			    from: "+18559561331",
-			    body: body,
-			}, function(err, responseData) {
-				 if (!err) { // "err" is an error received during the request, if any
-			        // "responseData" is a JavaScript object containing data received from Twilio.
-			        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-			        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-			        console.log(responseData.from); // outputs "+14506667788"
-			        console.log(responseData.body); // outputs "word to your mother."
-			    }
-			    else{
-			    	console.log(err);
-			    }
-			    // res.send(output);
-			});
+	var arr = chunkSubstr1(body, MAX_TEXT_SIZE);
+
+	arr.forEach(function(text){
+		client.messages.create({
+				    to: phoneNumber,
+				    from: "+18559561331",
+				    body: text,
+				}, function(err, responseData) {
+					 if (!err) { // "err" is an error received during the request, if any
+				        // "responseData" is a JavaScript object containing data received from Twilio.
+				        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+				        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+				        console.log(responseData.from); // outputs "+14506667788"
+				        console.log(responseData.body); // outputs "word to your mother."
+				    }
+				    else{
+				    	console.log(err);
+				    }
+				    // res.send(output);
+				});
+	});
+
+}
+
+function chunkSubstr1(str, size) {
+  var chunks = new Array(str.length / size + .5 | 0),
+      nChunks = chunks.length;
+
+  var newo = 0;
+  for(var i = 0, o = 0; i < nChunks; ++i, o = newo) {
+    newo += size;
+    chunks[i] = str.substr(o, size);
+  }
+
+  return chunks;
 }

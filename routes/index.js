@@ -544,5 +544,18 @@ function sendMessage(phoneNumber, body){
 			});
 }
 
+function chunkSubstr1(str, size) {
+  var chunks = new Array(str.length / size + .5 | 0),
+      nChunks = chunks.length;
+
+  var newo = 0;
+  for(var i = 0, o = 0; i < nChunks; ++i, o = newo) {
+    newo += size;
+    chunks[i] = str.substr(o, size);
+  }
+
+  return chunks;
+}
+
 
 module.exports = router;
