@@ -7,7 +7,7 @@ var mongoose = require('../db/mongoose_connect.js');
 var sprintf = require('sprintf-js').sprintf;
 
 var today = new Date();
-var day = today.getDay();
+var day = today.getDay();//timezone is utc - since you're checking every day it's fine but if you werent you'd have to align the timezone to where the user is
 console.log("Today is " + day);
 
 var fq = User.where({has_subscribed: true});
