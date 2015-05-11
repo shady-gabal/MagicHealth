@@ -48,7 +48,7 @@ query.find(function(err, users){
 function sendCorrectVaccineUpdate(user){
 	var monthNum = parseInt(user.num_days_pregnant / 30);
 
-	if (user.sent_vaccine_updates.indexOf(monthNum) == -1){
+	if (user.finished_vaccines.indexOf(monthNum) == -1){
 		var query = VaccineTextUpdate.where({month: monthNum});
 
 		query.find(function(err, updates){
@@ -56,12 +56,17 @@ function sendCorrectVaccineUpdate(user){
 				console.log("Error finding vtu for month " + monthNum + " for user " + user.phone_number);
 			}
 			else{
+				var reminder = "";
+				if (user.sent_vaccine_updates.indexOf(monthNum) == -1)
+					user.sent_vaccine_updates.push(monthNum);
+				else reminder = "REMINDER - ";
+
 				if (updates){
 					updates.forEach(function(update){
 						console.log("sending v update.data: " + update.data + " for month " + update.month);
-						sendMessage(user.phone_number, update.data);
+						sendMessage(user.phone_number, reminder + update.data);
 					});
-					user.sent_vaccine_updates.push(monthNum);
+
 
 				}
 				else console.log("No vtu for month " + monthNum + " for user " + user.phone_number);

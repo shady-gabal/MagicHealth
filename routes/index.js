@@ -228,9 +228,17 @@ router.get('/receiveMessage', function(req, res){
 				user.last_message_received = messageReceived;
 				console.log("Retrieved account for phone number " + phoneNumber);
 
-				if (messageReceived.toLowerCase().indexOf("unsubscribe") != -1){
+				messageReceived = messageReceived.toLowerCase();
+
+				if (messageReceived.indexOf("unsubscribe") != -1){
 					user.remove();
 					body = "You have been unsubscribed.";
+				}
+				else if (messageReceived.indexOf("gave birth") != -1 && user.pregnant && user.has_subscribed){
+					gaveBirth(user);
+				}
+				else if (messageReceived.indexOf("done") != -1 && user.has_subscribed && user.has_child){
+					tookVaccine(user);
 				}
 				// if (!user.has_subscribed){
 				else receiveSubscribe(user, res, resp, messageReceived);
@@ -250,6 +258,22 @@ router.get('/receiveMessage', function(req, res){
 
 	console.log(resp.toString());
 });
+
+
+function gaveBirth(user){
+	user.pregnant = false;
+	user.has_child = true;
+	user.num_days_child = 1;
+	user.save();
+	sendMessage(user.phone_number, "Congratulations!!!!! We hope he or she is a healthy child! We'll stop texting you pregnancy tips and start texting you information on which vaccines your child should be receiving.");
+}
+
+
+function tookVaccine(user){
+	var item = user.sent_vaccine_updates[user.sent_vaccine_updates.length - 1];
+	user.finished_vaccines.push(item);
+	sendMessage(user.phone_number, "Got it. Good job!");
+}
 
 
 function sendSubscribe(user, res, resp, existingBody){

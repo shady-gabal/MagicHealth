@@ -21,6 +21,7 @@ var userSchema = new Schema({
 	has_child : {type: Boolean, default: false},
 	num_days_child: {type: Number, default: 0},
 	sent_vaccine_updates: [Number],
+	finished_vaccines : [Number],
 
 	day_to_receive_messages : {type: Number, default: 0},
 
