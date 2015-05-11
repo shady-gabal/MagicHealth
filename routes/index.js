@@ -546,8 +546,8 @@ function receiveSubscribe(user, res, resp, messageReceived){
 				var hour = date.getHours();
 
 				if (today == intDay && hour >= SEND_TEXT_UPDATES_HOUR){
-					// user.subscribe_step = 11;
-					user.subscribe_step = 31;
+					user.subscribe_step = 11;
+					// user.subscribe_step = 31;
 				}
 				else{
 					user.subscribe_step = 31;
@@ -560,6 +560,7 @@ function receiveSubscribe(user, res, resp, messageReceived){
 
 			case 11:
 			if (messageReceived.indexOf('yes') != -1 || messageReceived.indexOf('yea') != -1 || messageReceived.indexOf('yeah') != -1){
+				sendCorrectTextUpdate(user);
 				user.subscribe_step = 31;
 				user.save();
 			}
@@ -624,7 +625,25 @@ function sendMessage(phoneNumber, body){
 			});
 }
 
-function sendWeeklyText(user){
+function sendCorrectTextUpdate(user){
+	var weekNum = parseInt(user.num_days_pregnant / 7);
+
+	var query = PregnancyTextUpdate.where({week: weekNum});
+
+	query.find(function(err, updates){
+		if (err){
+			console.log("Error finding ptu for week " + weekNum + " for user " + user.phone_number);
+		}
+		else{
+			if (updates){
+				updates.forEach(function(update){
+					console.log("sending update.data: " + update.data + " for week " + update.week);
+					sendMessage(user.phone_number, update.data);
+				});
+			}
+			else console.log("No ptu for week " + weekNum + " for user " + user.phone_number);
+		}
+	});
 
 }
 

@@ -1,3 +1,4 @@
 web: node bin/www
 send_text_updates_worker: node scheduled_jobs/send_text_updates.js
 increase_num_days_pregnant_worker: node scheduled_jobs/increase_num_days_pregnant.js
+send_vaccine_updates_worker: node scheduled_jobs/send_vaccine_updates.js
