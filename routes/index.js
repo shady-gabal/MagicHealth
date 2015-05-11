@@ -49,7 +49,9 @@ router.get('/resetShady', function(req, res){
 	query.findOne(function(err, user){
 		if (!err){
 			if (user){
-				user.pregnant = true;
+				user.pregnant = false;
+				user.has_child = true;
+				user.num_days_child = 31;
 				user.first_name = "Shady";
 				user.num_days_pregnant = 1;
 				user.day_to_receive_messages = 1;
