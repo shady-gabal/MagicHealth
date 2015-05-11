@@ -3,6 +3,8 @@ var accountSid = 'AC35c4885b8ea34af7e3f36efa03f18f0f';
 var authToken = "b950959ade49e8d6fa835691bfa1a029";
 var client = twilio(accountSid, authToken);
 var User = require('../db/User.js');
+var PregnancyTextUpdate = require('../db/PregnancyTextUpdate.js');
+
 var mongoose = require('../db/mongoose_connect.js');
 var sprintf = require('sprintf-js').sprintf;
 
@@ -33,7 +35,8 @@ query.find(function(err, users){
 
 			users.forEach(function(user){
 				console.log("Sending message to " + user.phone_number);
-				sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this let Shady know por favor");
+				// sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this let Shady know por favor");
+				sendCorrectTextUpdate(user);
 			});
 
 		}
@@ -41,6 +44,24 @@ query.find(function(err, users){
 	}
 });
 
+function sendCorrectTextUpdate(user){
+	var weekNum = parseInt(user.num_days_pregnant / 7);
+
+	var query = PregnancyTextUpdate.where({week: weekNum});
+
+	query.find(function(err, update){
+		if (err){
+			console.log("Error finding ptu for week " + weekNum + " for user " + user.phone_number);
+		}
+		else{
+			if (update){
+				sendMessage(user.phone_number, update.data);
+			}
+			else console.log("No ptu for week " + weekNum + " for user " + user.phone_number);
+		}
+	});
+
+}
 
 function sendMessage(phoneNumber, body){
 	client.messages.create({

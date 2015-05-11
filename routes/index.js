@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var User = require('../db/User.js');
 var sprintf = require('sprintf-js').sprintf;
+var PregnancyTextUpdate = require('../db/PregnancyTextUpdate.js');
+var fs = require('fs');
 // var schedule = require('node-schedule');
 
 var mongoose = require('../db/mongoose_connect.js');
@@ -54,38 +56,38 @@ router.get('/resetShady', function(req, res){
 });
 
 
-// router.post('/message', function(req, res){
 
-// 	console.log(req);
+router.get('/refillPregInfo', function(req, res){
+	var body = "";
+	PregnancyTextUpdate.remove({}, function(){
+		body += 'Removed old data.\n';
 
-// 		var phoneNumber = "+13472102276";
-// 		var output = "";
+		fs.readFile('input_data/pregnancy_tips', 'utf8', function (err,fileData) {
+		  if (err) {
+		     body += err;
+		  }
+		  else{
+		  	var data = fileData.split("\n\n");
 
-// 		client.messages.create({
-// 		    to: "+13472102276",
-// 		    from: "+18559561331",
-// 		    body: "Text received."
-// 		}, function(err, responseData) {
-// 			 if (!err) { // "err" is an error received during the request, if any
-// 		        // "responseData" is a JavaScript object containing data received from Twilio.
-// 		        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-// 		        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-// 		        console.log(responseData.from); // outputs "+14506667788"
-// 		        console.log(responseData.body); // outputs "word to your mother."
-// 				output += "Sent to " + phoneNumber + "\n";
+		  	data.forEach(function(tuple){
+		  		var arr = tuple.split("\n");
+		  		var week = parseInt(arr[0]);
+		  		var info = arr[1];
+		  		body += "Creating " + week + " : " + info + " \n\n";
 
-// 		    }
-// 		    else{
-// 		    	console.log(err);
-// 		    	output += "Error";
-// 		    }
+		  		var p = new PregnancyTextUpdate({
+		  			week: week,
+		  			data: info
+		  		});
+		  		p.save();
+		  	});
+		  }
+		  res.send(body);
+		});
+	});
 
-// 		    res.send(output);
-// 		});
+});
 
-// 	output += "Sending to " + phoneNumber + "\n";
-
-// });
 
 // router.get('/message', function(req, res){
 // 	console.log(req);
