@@ -11,24 +11,26 @@ var sprintf = require('sprintf-js').sprintf;
 var today = new Date();
 var day = today.getDay();
 
-var query = User.where({day_to_receive_messages: day, has_subscribed: true});
-query.find(function(err, users){
-	if (err){
-		console.log("Error finding users for day " + day);
-	}
-	else{
-		if (users && users.length > 0){
+run();
 
-			users.forEach(function(user){
-				console.log("Sending message to " + user.phone_number);
-				// sendMessage(user.phone_number, "How do you find Will Smith in the snow?\n\n You look for fresh prints.\n\n If you received this let Shady know por favor");
-				sendCorrectTextUpdate(user);
-			});
-
+function run(){
+	var query = User.where({day_to_receive_messages: day, has_subscribed: true});
+	query.find(function(err, users){
+		if (err){
+			console.log("Error finding users for day " + day);
 		}
-		else console.log("No users with day_to_receive_messages equal to " + day);
-	}
-});
+		else{
+			if (users && users.length > 0){
+
+				users.forEach(function(user){
+					sendCorrectTextUpdate(user);
+				});
+
+			}
+			else console.log("No users with day_to_receive_messages equal to " + day);
+		}
+	});
+}
 
 function sendCorrectTextUpdate(user){
 	var weekNum = parseInt(user.num_days_pregnant / 7);
@@ -42,7 +44,6 @@ function sendCorrectTextUpdate(user){
 		else{
 			if (updates){
 				updates.forEach(function(update){
-					console.log("sending update.data: " + update.data + " for week " + update.week);
 					sendMessage(user.phone_number, update.data);
 				});
 			}
@@ -53,6 +54,8 @@ function sendCorrectTextUpdate(user){
 }
 
 function sendMessage(phoneNumber, body){
+		console.log("Sending message to " + phoneNumber);
+
 		client.messages.create({
 				    to: phoneNumber,
 				    from: "+18559561331",
@@ -71,4 +74,4 @@ function sendMessage(phoneNumber, body){
 				});
 
 }
-
+module.exports = run;

@@ -165,6 +165,12 @@ router.get('/sendVaccineUpdates', function(req, res){
 	res.send("okay");
 });
 
+router.get('/sendPregnancyUpdates', function(req, res){
+	var run = require('../scheduled_jobs/send_text_updates.js');
+	run();
+	res.send("okay");
+});
+
 router.get('/getPregInfo', function(req, res){
 	var body = "Fetching...\n\n";
 	var q = PregnancyTextUpdate.where({});
@@ -192,7 +198,10 @@ router.get('/getVaccInfo', function(req, res){
 
 router.get('/sendMessageTo', function(req, res){
 	var phoneNumber = req.query.phoneNumber;
-	sendMessage(phoneNumber, 'Roses are red\nViolets are blue\nYou fuckin idiot');
+	var body = req.query.message;
+	if (!body)
+		body = "this is a message. someone wanted to send it to you...so...uh...here it is";
+	sendMessage(phoneNumber, body);
 });
 
 router.get('/receiveMessage', function(req, res){

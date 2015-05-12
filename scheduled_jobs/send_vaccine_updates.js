@@ -25,7 +25,6 @@ function run(){
 		else{
 			if (users && users.length > 0){
 				users.forEach(function(user){
-					console.log("Sending message to " + user.phone_number);
 					sendCorrectVaccineUpdate(user);
 				});
 
@@ -69,6 +68,7 @@ function sendCorrectVaccineUpdate(user){
 }
 
 function sendMessage(phoneNumber, body){
+		console.log("Sending message to " + phoneNumber);
 
 		client.messages.create({
 				    to: phoneNumber,
