@@ -16,7 +16,6 @@ var authToken = "b950959ade49e8d6fa835691bfa1a029";
 var client = twilio(accountSid, authToken);
 
 // var SEND_TEXT_UPDATES_HOUR = 15;
-var SEND_TEXT_UPDATES_HOUR = 0;
 
 
 /* SCHEDULE TEXTS */
@@ -582,16 +581,15 @@ function receiveSubscribe(user, res, resp, messageReceived){
 			}
 			else{
 				console.log("Day is " + day + ". index is " + index);
-				var intDay = parseInt(index/2);
-				console.log("intDay is " + intDay);
-				user.day_to_receive_messages=  intDay;
+				// var intDay = index;
+				user.day_to_receive_messages=  index;
 
 
 				var date = new Date();
 				var today = date.getDay();//timezone is utc - since you're checking every day it's fine but if you werent you'd have to align the timezone to where the user is	
 				var hour = date.getHours();
 
-				if (today == intDay && hour >= SEND_TEXT_UPDATES_HOUR){
+				if (today == index){
 					user.subscribe_step = 11;
 					// user.subscribe_step = 31;
 				}
