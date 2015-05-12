@@ -311,13 +311,14 @@ function tookVaccine(user){
 	console.log("item " + item);
 	console.log(user);
 	if (item && user.finished_vaccines.indexOf(item) == -1){
+		user.sent_vaccine_updates.pop();
 		console.log("User " + user.phone_number + " has taken vaccine " + item);
 		user.finished_vaccines.push(item);
 		user.markModified('finished_vaccines');
 		user.save();
 		sendMessage(user.phone_number, "Got it. Good job!");
 	}
-	else sendMessage(user.phone_number, "Got it. Good job!");
+	else sendMessage(user.phone_number, "We don't seem to have any vaccines that you");
 
 }
 
