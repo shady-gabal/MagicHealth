@@ -44,11 +44,6 @@ router.get('/reset', function(req, res){
 });
 
 router.get('/resetShadyPreggers', function(req, res){
-	var step = req.query.subscribe_step;
-
-	if (!step)
-		step = 10;
-
 	var query = User.where({phone_number: "13472102276"});
 	query.findOne(function(err, user){
 		if (!err){
@@ -67,8 +62,8 @@ router.get('/resetShadyPreggers', function(req, res){
 
 				user.pregnant = true;
 				user.num_days_pregnant = 100;
-				user.has_subscribed = false;
-				user.subscribe_step = step;
+				user.has_subscribed = true;
+				user.subscribe_step = 31;
 
 
 				user.save();
@@ -89,7 +84,7 @@ router.get('/resetShadyChild', function(req, res){
 				user.day_to_receive_messages = (new Date()).getDay();
 				user.finished_vaccines = [];
 				user.sent_vaccine_updates = [];
-				
+
 				user.pregnant = false;
 				user.has_child = true;
 				user.num_days_child = 31;
