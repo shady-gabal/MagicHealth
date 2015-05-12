@@ -275,10 +275,14 @@ function gaveBirth(user){
 
 function tookVaccine(user){
 	var item = user.sent_vaccine_updates[user.sent_vaccine_updates.length - 1];
-	console.log(user.sent_vaccine_updates);
-	console.log(item);
-	user.finished_vaccines.push(item);
-	sendMessage(user.phone_number, "Got it. Good job!");
+	if (item && user.finished_vaccines.indexOf(item) == -1){
+		console.log(user.sent_vaccine_updates);
+		console.log(item);
+		user.finished_vaccines.push(item);
+		sendMessage(user.phone_number, "Got it. Good job!");
+	}
+	else sendMessage(user.phone_number, "Yep we already know.");
+
 }
 
 
