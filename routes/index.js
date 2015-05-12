@@ -49,16 +49,24 @@ router.get('/resetShady', function(req, res){
 	query.findOne(function(err, user){
 		if (!err){
 			if (user){
-				user.pregnant = false;
-				user.has_child = true;
-				user.num_days_child = 31;
 				user.first_name = "Shady";
-				user.num_days_pregnant = 1;
-				user.day_to_receive_messages = 1;
-				user.has_subscribed = true;
-				user.subscribe_step = 31;
+				user.day_to_receive_messages = (new Date()).getDay();
 				user.finished_vaccines = [];
 				user.sent_vaccine_updates = [];
+
+				// user.pregnant = false;
+				// user.has_child = true;
+				// user.num_days_child = 31;
+				// user.num_days_pregnant = 1;
+				// user.has_subscribed = true;
+				// user.subscribe_step = 31;
+
+				user.pregnant = true;
+				user.num_days_pregnant = 100;
+				user.has_subscribed = false;
+				user.subscribe_step = 10;
+
+
 				user.save();
 				res.send("Fix er upper boooiiiiii aii");
 			}
