@@ -60,6 +60,7 @@ function sendCorrectVaccineUpdate(user){
 				if (user.sent_vaccine_updates.indexOf(monthNum) == -1){
 					user.sent_vaccine_updates.push(monthNum);
 					user.markModified('sent_vaccine_updates');
+					user.save();
 				}
 				else reminder = "REMINDER - ";
 
