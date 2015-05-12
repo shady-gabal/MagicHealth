@@ -14,7 +14,7 @@ var day = today.getDay();
 run();
 
 function run(){
-	var query = User.where({day_to_receive_messages: day, has_subscribed: true});
+	var query = User.where({day_to_receive_messages: day, has_subscribed: true, pregnant: true});
 	query.find(function(err, users){
 		if (err){
 			console.log("Error finding users for day " + day);
