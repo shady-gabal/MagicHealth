@@ -9,23 +9,7 @@ var mongoose = require('../db/mongoose_connect.js');
 var sprintf = require('sprintf-js').sprintf;
 
 var today = new Date();
-var day = today.getDay();//timezone is utc - since you're checking every day it's fine but if you werent you'd have to align the timezone to where the user is
-
-console.log("Today is " + day);
-
-var fq = User.where({has_subscribed: true});
-
-// fq.find(function(err, users){
-// 	if (err){
-// 		console.log("Error finding users shady man");
-// 	}
-// 	else{
-// 		users.forEach(function(user){
-// 			console.log("User " + user.phone_number + " : " + user.day_to_receive_messages);
-// 		});
-// 	}
-// });
-
+var day = today.getDay();
 
 var query = User.where({day_to_receive_messages: day, has_subscribed: true});
 query.find(function(err, users){
@@ -69,9 +53,6 @@ function sendCorrectTextUpdate(user){
 }
 
 function sendMessage(phoneNumber, body){
-	// var arr = chunkSubstr1(body, MAX_TEXT_SIZE);
-
-	// arr.forEach(function(text){
 		client.messages.create({
 				    to: phoneNumber,
 				    from: "+18559561331",
@@ -87,21 +68,7 @@ function sendMessage(phoneNumber, body){
 				    else{
 				    	console.log(err);
 				    }
-				    // res.send(output);
 				});
-	// });
 
 }
 
-// function chunkSubstr1(str, size) {
-//   var chunks = new Array(str.length / size + .5 | 0),
-//       nChunks = chunks.length;
-
-//   var newo = 0;
-//   for(var i = 0, o = 0; i < nChunks; ++i, o = newo) {
-//     newo += size;
-//     chunks[i] = str.substr(o, size);
-//   }
-
-//   return chunks;
-// }

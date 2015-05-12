@@ -10,40 +10,30 @@ var mongoose = require('../db/mongoose_connect.js');
 var sprintf = require('sprintf-js').sprintf;
 
 var today = new Date();
-var day = today.getDay();//timezone is utc - since you're checking every day it's fine but if you werent you'd have to align the timezone to where the user is
+var day = today.getDay();
 
 console.log("Today is " + day);
 
-// var fq = User.where({has_subscribed: true});
+run();
 
-// fq.find(function(err, users){
-// 	if (err){
-// 		console.log("Error finding users shady man");
-// 	}
-// 	else{
-// 		users.forEach(function(user){
-// 			console.log("User " + user.phone_number + " : " + user.day_to_receive_messages);
-// 		});
-// 	}
-// });
-
-
-var query = User.where({day_to_receive_messages: day, has_subscribed: true, has_child: true});
-query.find(function(err, users){
-	if (err){
-		console.log("Error finding users for day " + day);
-	}
-	else{
-		if (users && users.length > 0){
-			users.forEach(function(user){
-				console.log("Sending message to " + user.phone_number);
-				sendCorrectVaccineUpdate(user);
-			});
-
+function run(){
+	var query = User.where({day_to_receive_messages: day, has_subscribed: true, has_child: true});
+	query.find(function(err, users){
+		if (err){
+			console.log("Error finding users for day " + day);
 		}
-		else console.log("No users with day_to_receive_messages equal to " + day);
-	}
-});
+		else{
+			if (users && users.length > 0){
+				users.forEach(function(user){
+					console.log("Sending message to " + user.phone_number);
+					sendCorrectVaccineUpdate(user);
+				});
+
+			}
+			else console.log("No users with day_to_receive_messages equal to " + day);
+		}
+	});
+}
 
 function sendCorrectVaccineUpdate(user){
 	var monthNum = parseInt(user.num_days_pregnant / 30);
@@ -79,9 +69,7 @@ function sendCorrectVaccineUpdate(user){
 }
 
 function sendMessage(phoneNumber, body){
-	// var arr = chunkSubstr1(body, MAX_TEXT_SIZE);
 
-	// arr.forEach(function(text){
 		client.messages.create({
 				    to: phoneNumber,
 				    from: "+18559561331",
@@ -91,27 +79,14 @@ function sendMessage(phoneNumber, body){
 				        // "responseData" is a JavaScript object containing data received from Twilio.
 				        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
 				        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-				        console.log(responseData.from); // outputs "+14506667788"
-				        console.log(responseData.body); // outputs "word to your mother."
+				        console.log(responseData.from); 
+				        console.log(responseData.body); 
 				    }
 				    else{
 				    	console.log(err);
 				    }
-				    // res.send(output);
 				});
-	// });
 
 }
 
-// function chunkSubstr1(str, size) {
-//   var chunks = new Array(str.length / size + .5 | 0),
-//       nChunks = chunks.length;
-
-//   var newo = 0;
-//   for(var i = 0, o = 0; i < nChunks; ++i, o = newo) {
-//     newo += size;
-//     chunks[i] = str.substr(o, size);
-//   }
-
-//   return chunks;
-// }
+module.exports = run;

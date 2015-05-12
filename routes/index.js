@@ -37,9 +37,10 @@ router.get('/', function(req, res) {
 });
 
 
+/* ALL DEBUGGING METHODS */
 router.get('/reset', function(req, res){
 	User.remove({}, function(){
-		res.send("Aiiiiiiiiiite"); //delete all users
+		res.send("Ok bossman"); //delete all users
 	});
 });
 
@@ -52,13 +53,6 @@ router.get('/resetShadyPreggers', function(req, res){
 				user.day_to_receive_messages = (new Date()).getDay();
 				user.finished_vaccines = [];
 				user.sent_vaccine_updates = [];
-
-				// user.pregnant = false;
-				// user.has_child = true;
-				// user.num_days_child = 31;
-				// user.num_days_pregnant = 1;
-				// user.has_subscribed = true;
-				// user.subscribe_step = 31;
 
 				user.pregnant = true;
 				user.num_days_pregnant = 100;
@@ -92,7 +86,7 @@ router.get('/resetShadyChild', function(req, res){
 				user.has_subscribed = true;
 				user.subscribe_step = 31;
 				user.save();
-				res.send("Fix er upper boooiiiiii aii");
+				res.send("Ugh fine shady");
 			}
 			else res.send("No user found");
 		}
@@ -165,7 +159,11 @@ router.get('/refillVaccInfo', function(req, res){
 
 });
 
-
+router.get('sendVaccineUpdates', function(req, res){
+	var run = require('../scheduled_jobs/send_vaccine_updates.js');
+	run();
+	res.send("okay");
+});
 
 router.get('/getPregInfo', function(req, res){
 	var body = "Fetching...\n\n";
@@ -190,38 +188,7 @@ router.get('/getVaccInfo', function(req, res){
 });
 
 
-// router.get('/message', function(req, res){
-// 	console.log(req);
-
-// 	var phoneNumber = "+13472102276";
-// 		var output = "";
-
-// 	client.messages.create({
-// 	    to: phoneNumber,
-// 	    from: "+18559561331",
-// 	    body: "\nKnock knock. \n Who's there? \n God \n God who? \n Godzilla."
-// 	}, function(err, responseData) {
-// 		 if (!err) { // "err" is an error received during the request, if any
-// 	        // "responseData" is a JavaScript object containing data received from Twilio.
-// 	        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-// 	        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-// 	        console.log(responseData.from); // outputs "+14506667788"
-// 	        console.log(responseData.body); // outputs "word to your mother."
-// 			output += "Sent to " + phoneNumber;
-
-// 	    }
-// 	    else{
-// 	    	console.log(err);
-// 	    	output += "Error";
-
-// 	    }
-// 	    res.send(output);
-
-// 	});
-
-// 	output += "Sending to " + phoneNumber + "\n";
-
-// });
+/* *** */
 
 router.get('/sendMessageTo', function(req, res){
 	var phoneNumber = req.query.phoneNumber;
@@ -276,12 +243,7 @@ router.get('/receiveMessage', function(req, res){
 				else if (messageReceived.indexOf("done") != -1 && user.has_subscribed && user.has_child){
 					tookVaccine(user);
 				}
-				// if (!user.has_subscribed){
 				else receiveSubscribe(user, res, resp, messageReceived);
-				// }
-				// else{
-				// 	body = "Thank you for subscribing.";
-				// }
 			}
 		}
 
@@ -307,9 +269,6 @@ function gaveBirth(user){
 
 function tookVaccine(user){
 	var item = user.sent_vaccine_updates[user.sent_vaccine_updates.length - 1];
-	console.log(user.sent_vaccine_updates);
-	console.log("item " + item);
-	console.log(user);
 	if (item != null && user.finished_vaccines.indexOf(item) == -1){
 		user.sent_vaccine_updates.pop();
 		console.log("User " + user.phone_number + " has taken vaccine " + item);
@@ -370,10 +329,6 @@ function sendSubscribe(user, res, resp, existingBody){
 		case 10: //“What day of the week would you like to receive messages from us?”
 		body += "What day of the week would you like to receive messages from us?"
 		break;
-
-		// case 11: //“At what time during the day would you like to receive messages from us?
-		// body += "At what time during the day would you like to receive messages from us?"
-		// break;
 
 		case 11://Today is ..
 		var arr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -689,8 +644,8 @@ function sendMessage(phoneNumber, body){
 			        // "responseData" is a JavaScript object containing data received from Twilio.
 			        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
 			        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-			        console.log(responseData.from); // outputs "+14506667788"
-			        console.log(responseData.body); // outputs "word to your mother."
+			        console.log(responseData.from);
+			        console.log(responseData.body); 
 			    }
 			    else{
 			    	console.log(err);

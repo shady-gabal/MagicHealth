@@ -15,8 +15,6 @@ var userSchema = new Schema({
 
 	pregnant : {type: Boolean, default: false},
 	num_days_pregnant : {type: Number, default: 0},
-	// num_weeks_pregnant : {type: Number, default: 0},
-	// num_months_pregnant : {type: Number, default: 0},
 
 	has_child : {type: Boolean, default: false},
 	num_days_child: {type: Number, default: 0},
