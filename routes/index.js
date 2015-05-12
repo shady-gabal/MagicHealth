@@ -43,7 +43,12 @@ router.get('/reset', function(req, res){
 	});
 });
 
-router.get('/resetShady', function(req, res){
+router.get('/resetShadyPreggers', function(req, res){
+	var step = req.query.subscribe_step;
+
+	if (!step)
+		step = 10;
+
 	var query = User.where({phone_number: "13472102276"});
 	query.findOne(function(err, user){
 		if (!err){
@@ -63,9 +68,34 @@ router.get('/resetShady', function(req, res){
 				user.pregnant = true;
 				user.num_days_pregnant = 100;
 				user.has_subscribed = false;
-				user.subscribe_step = 10;
+				user.subscribe_step = step;
 
 
+				user.save();
+				res.send("Fix er upper boooiiiiii aii");
+			}
+			else res.send("No user found");
+		}
+		else res.send("Error");
+	});
+});
+
+router.get('/resetShadyChild', function(req, res){
+	var query = User.where({phone_number: "13472102276"});
+	query.findOne(function(err, user){
+		if (!err){
+			if (user){
+				user.first_name = "Shady";
+				user.day_to_receive_messages = (new Date()).getDay();
+				user.finished_vaccines = [];
+				user.sent_vaccine_updates = [];
+				
+				user.pregnant = false;
+				user.has_child = true;
+				user.num_days_child = 31;
+				user.num_days_pregnant = 1;
+				user.has_subscribed = true;
+				user.subscribe_step = 31;
 				user.save();
 				res.send("Fix er upper boooiiiiii aii");
 			}
@@ -348,7 +378,7 @@ function sendSubscribe(user, res, resp, existingBody){
 		case 11://Today is ..
 		var arr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 		var intDay = (new Date()).getDay();
-		body += "Today is " + arr[intDay] + ", and we've already sent out the texts for the day. Would you like to receive your weekly text now?";
+		body += "Today is " + arr[intDay] + ". Would you like to receive your weekly text now?";
 		break;
 
 		case 31:
