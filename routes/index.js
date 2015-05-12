@@ -310,7 +310,7 @@ function tookVaccine(user){
 	console.log(user.sent_vaccine_updates);
 	console.log("item " + item);
 	console.log(user);
-	if (item && user.finished_vaccines.indexOf(item) == -1){
+	if (item != null && user.finished_vaccines.indexOf(item) == -1){
 		user.sent_vaccine_updates.pop();
 		console.log("User " + user.phone_number + " has taken vaccine " + item);
 		user.finished_vaccines.push(item);
@@ -318,7 +318,7 @@ function tookVaccine(user){
 		user.save();
 		sendMessage(user.phone_number, "Got it. Good job!");
 	}
-	else sendMessage(user.phone_number, "We don't seem to have any vaccines that you");
+	else sendMessage(user.phone_number, "Your child has already taken all the vaccines required so far at their age.");
 
 }
 
