@@ -159,7 +159,7 @@ router.get('/refillVaccInfo', function(req, res){
 
 });
 
-router.get('sendVaccineUpdates', function(req, res){
+router.get('/sendVaccineUpdates', function(req, res){
 	var run = require('../scheduled_jobs/send_vaccine_updates.js');
 	run();
 	res.send("okay");
