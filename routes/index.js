@@ -57,6 +57,8 @@ router.get('/resetShady', function(req, res){
 				user.day_to_receive_messages = 1;
 				user.has_subscribed = true;
 				user.subscribe_step = 31;
+				user.finished_vaccines = [];
+				user.sent_vaccine_updates = [];
 				user.save();
 				res.send("Fix er upper boooiiiiii aii");
 			}
@@ -219,7 +221,9 @@ router.get('/receiveMessage', function(req, res){
 				//no current account, subscribe
 				var newUser = new User({
 					phone_number : phoneNumber,
-					last_message_received: messageReceived
+					last_message_received: messageReceived,
+					sent_vaccine_updates : [],
+					finished_vaccines : []
 				});
 				newUser.save();
 				receiveSubscribe(newUser, res, resp, messageReceived);
