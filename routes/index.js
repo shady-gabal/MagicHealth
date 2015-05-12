@@ -257,8 +257,6 @@ router.get('/receiveMessage', function(req, res){
 					sent_vaccine_updates : [],
 					finished_vaccines : []
 				});
-				newUser.markModified('sent_vaccine_updates');
-				newUser.markModified('finished_vaccines');
 				newUser.save();
 				receiveSubscribe(newUser, res, resp, messageReceived);
 			}
@@ -309,13 +307,14 @@ function gaveBirth(user){
 
 function tookVaccine(user){
 	var item = user.sent_vaccine_updates[user.sent_vaccine_updates.length - 1];
-	console.log("arr " + user.sent_vaccine_updates);
+	console.log(user.sent_vaccine_updates);
 	console.log("item " + item);
 	console.log(user);
 	if (item && user.finished_vaccines.indexOf(item) == -1){
-
+		console.log("User " + user.phone_number + " has taken vaccine " + item);
 		user.finished_vaccines.push(item);
 		user.markModified('finished_vaccines');
+		user.save();
 		sendMessage(user.phone_number, "Got it. Good job!");
 	}
 	else sendMessage(user.phone_number, "Got it. Good job!");
