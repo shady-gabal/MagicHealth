@@ -307,8 +307,9 @@ function gaveBirth(user){
 
 function tookVaccine(user){
 	var item = user.sent_vaccine_updates[user.sent_vaccine_updates.length - 1];
-	console.log(user.sent_vaccine_updates);
-	console.log(item);
+	console.log("arr " + user.sent_vaccine_updates);
+	console.log("item " + item);
+	console.log(user);
 	if (item && user.finished_vaccines.indexOf(item) == -1){
 
 		user.finished_vaccines.push(item);
