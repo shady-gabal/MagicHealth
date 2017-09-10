@@ -15,21 +15,6 @@ var accountSid = 'AC35c4885b8ea34af7e3f36efa03f18f0f';
 var authToken = "b950959ade49e8d6fa835691bfa1a029";
 var client = twilio(accountSid, authToken);
 
-// var SEND_TEXT_UPDATES_HOUR = 15;
-
-
-/* SCHEDULE TEXTS */
-
-//'0 0 0 * * *'  every day
-// var j = schedule.scheduleJob('0 * * * * *', function(){
-//     console.log('Checking users for texts to send today...');
-//     checkUsersAndSendTexts();
-//     // sendMessage('13472102276', 'cron bro');
-// });
-
-
-// function checkUsersAndSendTexts(){
-// }
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -43,57 +28,6 @@ router.get('/reset', function(req, res){
 		res.send("Ok bossman"); //delete all users
 	});
 });
-
-router.get('/resetShadyPreggers', function(req, res){
-	var query = User.where({phone_number: "13472102276"});
-	query.findOne(function(err, user){
-		if (!err){
-			if (user){
-				user.first_name = "Shady";
-				user.day_to_receive_messages = (new Date()).getDay();
-				user.finished_vaccines = [];
-				user.sent_vaccine_updates = [];
-
-				user.pregnant = true;
-				user.num_days_pregnant = 100;
-				user.has_subscribed = true;
-				user.subscribe_step = 31;
-
-
-				user.save();
-				res.send("Fix er upper boooiiiiii aii");
-			}
-			else res.send("No user found");
-		}
-		else res.send("Error");
-	});
-});
-
-router.get('/resetShadyChild', function(req, res){
-	var query = User.where({phone_number: "13472102276"});
-	query.findOne(function(err, user){
-		if (!err){
-			if (user){
-				user.first_name = "Shady";
-				user.day_to_receive_messages = (new Date()).getDay();
-				user.finished_vaccines = [];
-				user.sent_vaccine_updates = [];
-
-				user.pregnant = false;
-				user.has_child = true;
-				user.num_days_child = 31;
-				user.num_days_pregnant = 1;
-				user.has_subscribed = true;
-				user.subscribe_step = 31;
-				user.save();
-				res.send("Ugh fine shady");
-			}
-			else res.send("No user found");
-		}
-		else res.send("Error");
-	});
-});
-
 
 
 router.get('/refillPregInfo', function(req, res){
